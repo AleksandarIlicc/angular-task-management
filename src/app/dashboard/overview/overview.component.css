@@ -112,8 +112,7 @@ i {
 }
 
 .task-complete {
-  /* background-color: #33ff6b; */
-  background-color: #61a010;
+  background-color: #33ff6b;
 }
 .task-in-progress {
   background-color: #ffa933;
