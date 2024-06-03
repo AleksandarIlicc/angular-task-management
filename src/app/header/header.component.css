@@ -1,0 +1,129 @@
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.app-header-logo {
+  color: #28282b;
+}
+
+.app-header-navbar {
+  display: flex;
+  align-items: center;
+  text-align: right;
+
+  @media only screen and (max-width: 48em) {
+    position: fixed;
+    top: -100%;
+    left: 0;
+    height: 50vh;
+    width: 100%;
+    transition: top 0.3s ease;
+
+    flex-direction: column;
+    justify-content: center;
+    gap: 3rem;
+    background-color: #f6f6ff;
+  }
+}
+
+.app-header-navbar.open {
+  top: 0;
+}
+
+.app-header-navbar a {
+  font-size: 1.6rem;
+  margin: 0px 1rem;
+  text-decoration: none;
+  color: #28282b;
+}
+
+.fas.fa-bars {
+  display: none;
+  font-size: 2rem;
+
+  @media only screen and (max-width: 48em) {
+    display: block;
+  }
+}
+
+.menu-close-icon {
+  display: none;
+  font-size: 4rem;
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  border: none;
+  background-color: transparent;
+
+  @media only screen and (max-width: 48em) {
+    display: block;
+  }
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown .dropbtn {
+  font-size: 1.6rem;
+  border: none;
+  outline: none;
+  color: black;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+.navbar a:hover,
+.dropdown:hover .dropbtn {
+  background-color: #fff;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 16rem;
+  box-shadow: 0px 0.8rem 1.6rem 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  font-size: 1.2rem;
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+@media only screen and (max-width: 48em) {
+  .dropdown .dropbtn {
+    width: 100%;
+    text-align: left;
+    padding: 1.2rem 2rem;
+  }
+
+  .dropdown-content {
+    position: static;
+    width: 100%;
+    box-shadow: none;
+  }
+
+  .dropdown-content a {
+    padding: 1.2rem 2rem;
+  }
+}

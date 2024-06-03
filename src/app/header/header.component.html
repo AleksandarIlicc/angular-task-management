@@ -1,0 +1,34 @@
+<div class="app-header">
+  <!--APP LOGO-->
+  <div class="app-header-logo">
+    <h2>Task Management</h2>
+  </div>
+
+  <!--APP NAVBAR-->
+  <div class="app-header-navbar" [ngClass]="{ open: isMenuOpen }">
+    <a routerLink="/">HOME</a>
+
+    <div class="dropdown" *ngIf="isLoggedIn; else loginButton">
+      <button class="dropbtn">
+        DASHBOARD
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <a routerLink="dashboard/overview">OVERVIEW</a>
+        <a routerLink="dashboard/stats">STATS</a>
+      </div>
+    </div>
+
+    <ng-template #loginButton>
+      <a routerLink="/login" *ngIf="!isLoggedIn">LOGIN</a>
+    </ng-template>
+
+    <a *ngIf="isLoggedIn" (click)="onLogout()">LOGOUT</a>
+
+    <button class="menu-close-icon" href="#" (click)="OnCloseMenu()">
+      &times;
+    </button>
+  </div>
+
+  <i class="fas fa-bars" (click)="OnOpenMenu()"></i>
+</div>

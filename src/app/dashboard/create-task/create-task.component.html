@@ -1,0 +1,118 @@
+<div class="overlay">
+  <div class="popup">
+    <h2>{{ isEditMode ? "Update Task" : "Create a new Task" }}</h2>
+    <a class="close" href="#" (click)="OnCloseForm()">&times;</a>
+    <div class="content">
+      <section class="container">
+        <form
+          action="#"
+          class="form"
+          #taskForm="ngForm"
+          (ngSubmit)="OnFormSubmitted(taskForm)"
+        >
+          <div class="input-box">
+            <label>Title*</label>
+            <input type="text" required name="title" ngModel #title="ngModel" />
+            <p class="error-message" *ngIf="title.touched && title.invalid">
+              *Title is a required filed.
+            </p>
+          </div>
+          <div class="input-box">
+            <label>Description*</label>
+            <textarea
+              rows="8"
+              name="desc"
+              required
+              ngModel
+              #desc="ngModel"
+            ></textarea>
+            <p class="error-message" *ngIf="desc.touched && desc.invalid">
+              *Description is a required filed.
+            </p>
+          </div>
+          <div class="column">
+            <div class="input-box">
+              <label>Assigned To</label>
+              <input
+                type="text"
+                name="assignedTo"
+                required
+                ngModel
+                #assignedto="ngModel"
+              />
+              <p
+                class="error-message"
+                *ngIf="assignedto.touched && assignedto.invalid"
+              >
+                *Assigned To is a required filed.
+              </p>
+            </div>
+            <div class="input-box">
+              <label>Created At</label>
+              <input
+                type="date"
+                name="createdAt"
+                required
+                ngModel
+                #createat="ngModel"
+              />
+              <p
+                class="error-message"
+                *ngIf="createat.touched && createat.invalid"
+              >
+                *Created At is a required filed.
+              </p>
+            </div>
+          </div>
+          <div class="input-box address">
+            <div class="column">
+              <div class="select-box">
+                <select
+                  name="priority"
+                  [ngModel]="defaultPriority"
+                  required
+                  #priority="ngModel"
+                >
+                  <option hidden>Priority</option>
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                  <option value="critical">Critical</option>
+                </select>
+                <p
+                  class="error-message"
+                  *ngIf="priority.touched && priority.invalid"
+                >
+                  *Priority is a required filed.
+                </p>
+              </div>
+              <div class="select-box">
+                <select
+                  name="status"
+                  [ngModel]="defaultStatus"
+                  required
+                  #status="ngModel"
+                >
+                  <option hidden>Status</option>
+                  <option value="open">Open</option>
+                  <option value="started">Started</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="complete">Complete</option>
+                </select>
+                <p
+                  class="error-message"
+                  *ngIf="status.touched && status.invalid"
+                >
+                  *Status is a required filed.
+                </p>
+              </div>
+            </div>
+          </div>
+          <button type="submit" [disabled]="taskForm.invalid">
+            {{ isEditMode ? "Update Task" : "Create Task" }}
+          </button>
+        </form>
+      </section>
+    </div>
+  </div>
+</div>

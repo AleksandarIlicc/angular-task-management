@@ -1,0 +1,12 @@
+.container strong {
+  font-size: 1.4rem;
+}
+
+.task-desc {
+  font-size: 1.2rem;
+}
+
+.task-detail {
+  width: 50%;
+  font-size: 1.4rem;
+}

@@ -1,0 +1,1 @@
+{"ast":null,"code":"export class LoggingInterceptorService {\n  intercept(req, next) {\n    console.log('Logging Interceptor called!');\n    console.log('Request sent to URL: ' + req.url);\n    return next.handle(req);\n  }\n}","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}
