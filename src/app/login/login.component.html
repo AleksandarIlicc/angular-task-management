@@ -35,10 +35,11 @@
         minlength="8"
       />
     </div>
+
     <button type="submit" class="app-login-btn" [disabled]="authForm.invalid">
       {{ isLoginMode ? "Login" : "Signup" }}
     </button>
-    <p>
+    <p class="form-text">
       {{
         isLoginMode ? "Do not have an accout yet?" : "Already have an account?"
       }}

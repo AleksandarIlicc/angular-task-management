@@ -1,29 +1,39 @@
 <div class="app-header">
-  <!--APP LOGO-->
+  <!-- APP LOGO -->
   <div class="app-header-logo">
-    <h2>Task Management</h2>
+    <h2>TaskMaster</h2>
   </div>
 
-  <!--APP NAVBAR-->
+  <!-- APP NAVBAR -->
   <div class="app-header-navbar" [ngClass]="{ open: isMenuOpen }">
-    <a routerLink="/">HOME</a>
+    <ng-container *ngFor="let link of navLinks">
+      <ng-container *ngIf="shouldShowLink(link)">
+        <ng-container *ngIf="!link.isDropdown; else dropdownTemplate">
+          <a routerLink="{{ link.routerLink }}" (click)="OnCloseMenu()">{{
+            link.label
+          }}</a>
+        </ng-container>
 
-    <div class="dropdown" *ngIf="isLoggedIn; else loginButton">
-      <button class="dropbtn">
-        DASHBOARD
-        <i class="fa fa-caret-down"></i>
-      </button>
-      <div class="dropdown-content">
-        <a routerLink="dashboard/overview">OVERVIEW</a>
-        <a routerLink="dashboard/stats">STATS</a>
-      </div>
-    </div>
+        <ng-template #dropdownTemplate>
+          <div class="dropdown">
+            <button class="dropbtn">
+              {{ link.label }}
+              <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+              <a
+                *ngFor="let dropdownLink of link.dropdownLinks"
+                routerLink="{{ dropdownLink.routerLink }}"
+                (click)="OnCloseMenu()"
+                >{{ dropdownLink.label }}</a
+              >
+            </div>
+          </div>
+        </ng-template>
+      </ng-container>
+    </ng-container>
 
-    <ng-template #loginButton>
-      <a routerLink="/login" *ngIf="!isLoggedIn">LOGIN</a>
-    </ng-template>
-
-    <a *ngIf="isLoggedIn" (click)="onLogout()">LOGOUT</a>
+    <a *ngIf="isLoggedIn" (click)="onLogout()">Logout</a>
 
     <button class="menu-close-icon" href="#" (click)="OnCloseMenu()">
       &times;

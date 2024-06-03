@@ -2,12 +2,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2rem;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  padding: 2rem 5rem;
+  box-shadow: rgba(226, 226, 226, 0.2) 0px 4px 7px;
 }
 
 .app-header-logo {
-  color: #28282b;
+  font-size: 1.6rem;
+  color: #ff8880;
 }
 
 .app-header-navbar {
