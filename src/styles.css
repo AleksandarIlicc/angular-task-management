@@ -44,6 +44,12 @@ p {
   background-color: #28282b;
 }
 
+@media screen and (max-width: 43.75em) {
+  .popup {
+    width: 70%;
+  }
+}
+
 .overlay {
   display: grid;
   place-items: center;
@@ -92,12 +98,7 @@ p {
 .popup .content {
   max-height: 30%;
   overflow: auto;
-}
-
-@media screen and (max-width: 43.75em) {
-  .popup {
-    width: 70%;
-  }
+  padding: 3rem;
 }
 
 .container {
