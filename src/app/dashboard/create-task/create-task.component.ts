@@ -11,7 +11,7 @@ import { Task } from "src/app/Model/Task";
 @Component({
   selector: "app-create-task",
   templateUrl: "./create-task.component.html",
-  styleUrls: ["./create-task.component.css"],
+  styleUrls: [],
 })
 export class CreateTaskComponent {
   @Input() isEditMode: boolean = false;

@@ -15,6 +15,19 @@
   }
 }
 
+.task-complete {
+  background-color: #43e870;
+}
+.task-in-progress {
+  background-color: #ffa933;
+}
+.task-started {
+  background-color: #336bff;
+}
+.task-open {
+  background-color: #ff5733;
+}
+
 .dashboard-header--left {
   flex-basis: 50%;
   align-items: center;
@@ -88,44 +101,11 @@ hr {
   place-items: center;
 }
 
-.task-action-icons {
-  text-align: right;
-}
-
-.task-action-btn {
-  margin: 0px 0.5rem;
-  border: none;
-  background-color: transparent;
-}
-
-i {
-  font-size: 1.6rem;
-}
-
-.task-item {
-  margin: 1.5rem 0;
-  padding: 1.5rem 3rem;
-  background-color: #fff;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 0.5rem 1.5rem;
-  border-radius: 0.5rem;
+.no-tasks-yet {
   font-size: 1.4rem;
-}
-
-.task-complete {
-  background-color: #33ff6b;
-}
-.task-in-progress {
-  background-color: #ffa933;
-}
-.task-started {
-  background-color: #336bff;
-}
-.task-open {
-  background-color: #ff5733;
-}
-
-.task-title {
-  border-bottom: #28282b 2px solid;
+  color: whitesmoke;
+  text-align: center;
+  padding: 2rem;
 }
 
 .create-task-btn {
@@ -136,97 +116,9 @@ i {
   margin: 0px 2px;
   border-radius: 2rem;
 }
+
 .create-task-btn.in-table {
   width: 100%;
   border: 2px dotted whitesmoke;
   background-color: transparent;
-}
-
-.loader {
-  border: 1.6rem solid #f3f3f3; /* Light grey */
-  border-top: 1.6rem solid #3498db; /* Blue */
-  border-radius: 50%;
-  width: 12rem;
-  height: 12rem;
-  animation: spin 2s linear infinite;
-  margin: 0 auto;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.sb {
-  min-width: 35rem; /* Set a default minimum width */
-  margin-left: -12.5rem; /* Divide value of min-width by 2 */
-  text-align: center; /* Centered text */
-  border-radius: 2px; /* Rounded borders */
-  padding: 1.6rem; /* Padding */
-  border-radius: 5px;
-  position: fixed; /* Sit on top of the screen */
-  z-index: 1; /* Add a z-index if needed */
-  left: 50%; /* Center the snackbar */
-  top: 4rem; /* 30px from the bottom */
-  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-  animation: fadein 0.5s, fadeout 0.5s 2.5s;
-}
-
-.sb-error {
-  background-color: #e74c3c; /* Black background color */
-  color: #fff; /* White text color */
-}
-
-.sb-success {
-  background-color: #1abc9c; /* Black background color */
-  color: #28282b; /* White text color */
-}
-
-/* Animations to fade the snackbar in and out */
-@-webkit-keyframes fadein {
-  from {
-    top: 0;
-    opacity: 0;
-  }
-  to {
-    top: 40px;
-    opacity: 1;
-  }
-}
-
-@keyframes fadein {
-  from {
-    top: 0;
-    opacity: 0;
-  }
-  to {
-    top: 40px;
-    opacity: 1;
-  }
-}
-
-@-webkit-keyframes fadeout {
-  from {
-    top: 30px;
-    opacity: 1;
-  }
-  to {
-    top: 0;
-    opacity: 0;
-  }
-}
-
-@keyframes fadeout {
-  from {
-    top: 30px;
-    opacity: 1;
-  }
-  to {
-    top: 0;
-    opacity: 0;
-  }
 }

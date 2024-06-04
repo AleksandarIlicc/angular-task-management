@@ -1,0 +1,37 @@
+<div class="task-item">
+  <div class="task-title">
+    <h3>{{ task.title }}</h3>
+  </div>
+  <p><b>Assigned to: </b>{{ task.assignedTo }}</p>
+  <p><b>Priority: </b>{{ task.priority }}</p>
+  <div class="task-footer">
+    <p class="task-status" setStatusBackground [statusStyle]="task.status">
+      {{ task.status }}
+    </p>
+    <div class="task-action-icons">
+      <button
+        class="task-action-btn"
+        title="Detail"
+        (click)="showDetails.emit(task.id)"
+      >
+        <i class="fa fa-info-circle" aria-hidden="true"></i>
+      </button>
+      <button
+        *ngIf="currentUser === task.author"
+        class="task-action-btn"
+        title="Edit"
+        (click)="editTask.emit(task.id)"
+      >
+        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+      </button>
+      <button
+        *ngIf="currentUser === task.author"
+        class="task-action-btn"
+        title="Delete"
+        (click)="deleteTask.emit(task.id)"
+      >
+        <i class="fa fa-trash" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</div>

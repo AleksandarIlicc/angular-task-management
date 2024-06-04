@@ -8,6 +8,8 @@ import { CommonModule } from "@angular/common";
 import { SharedModule } from "../shared.module";
 import { DashboardRouteModule } from "./dashboard-route.module";
 import { SetTaskBackground } from "../CustomDirectives/SetTaskBackground.directive";
+import { SetStatusBackground } from "../CustomDirectives/SetStatusBackground.directive";
+import { TaskCardComponent } from "./task-card/task-card.component";
 
 @NgModule({
   declarations: [
@@ -17,6 +19,8 @@ import { SetTaskBackground } from "../CustomDirectives/SetTaskBackground.directi
     OverviewComponent,
     StatsComponent,
     SetTaskBackground,
+    SetStatusBackground,
+    TaskCardComponent,
   ],
   imports: [CommonModule, SharedModule, DashboardRouteModule],
   exports: [SharedModule],

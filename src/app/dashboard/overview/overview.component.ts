@@ -1,13 +1,10 @@
 import { Component, OnInit, inject } from "@angular/core";
 import { Task } from "../../Model/Task";
-import {
-  HttpClient,
-  HttpHeaders,
-  HttpErrorResponse,
-} from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { TaskService } from "../../Services/task.service";
-import { Subscription } from "rxjs";
+import { Subject, Subscription } from "rxjs";
 import { NgForm } from "@angular/forms";
+import { AuthService } from "src/app/Services/auth.service";
 
 @Component({
   selector: "app-overview",
@@ -17,12 +14,15 @@ import { NgForm } from "@angular/forms";
 export class OverviewComponent implements OnInit {
   http: HttpClient = inject(HttpClient);
   taskService: TaskService = inject(TaskService);
+  authService: AuthService = inject(AuthService);
+
   showCreateTaskForm: boolean = false;
   showTaskDetails: boolean = false;
   allTasks: Task[] = [];
   selectedTask: Task;
   currentTask: Task | null = null;
   currentTaskId: string = "";
+  currentUser: string | null = null;
   searchedTasks: Task[] = [];
   searchQuery: string = "";
   isLoading: boolean = false;
@@ -41,10 +41,9 @@ export class OverviewComponent implements OnInit {
 
   ngOnInit() {
     this.fetchAllTasks();
-    this.errorSub = this.taskService.errorSubject.subscribe({
-      next: (httpError) => {
-        this.setErrorMessage(httpError);
-      },
+
+    this.authService.user.subscribe((user) => {
+      this.currentUser = user?.email;
     });
   }
 
@@ -62,6 +61,7 @@ export class OverviewComponent implements OnInit {
       createdAt: "",
       priority: "",
       status: "",
+      author: "",
     };
   }
 
@@ -83,15 +83,82 @@ export class OverviewComponent implements OnInit {
   }
 
   CreateOrUpdateTask(data: Task) {
+    const task = { ...data, author: this.currentUser };
+
     if (!this.editMode) {
-      this.taskService.CreateTask(data);
+      this.taskService.CreateTask(task).subscribe({
+        next: (data) => {
+          this.fetchAllTasks();
+        },
+        error: (err) => {
+          this.setErrorMessage(err);
+        },
+      });
     } else {
-      this.taskService.UpdateTask(this.currentTaskId, data);
+      this.taskService.UpdateTask(this.currentTaskId, task).subscribe({
+        next: (data) => {
+          this.fetchAllTasks();
+        },
+        error: (err) => {
+          this.setErrorMessage(err);
+        },
+      });
     }
   }
 
   FetchAllTaskClicked() {
     this.fetchAllTasks();
+  }
+
+  DeleteTask(id: string | undefined) {
+    this.taskService.DeleteTask(id).subscribe({
+      next: () => {
+        this.fetchAllTasks();
+      },
+      error: (err) => {
+        this.setErrorMessage(err);
+      },
+    });
+  }
+
+  DeleteAllTask() {
+    this.taskService.DeleteAllTasks().subscribe({
+      next: () => {
+        this.fetchAllTasks();
+      },
+      error: (err) => {
+        this.setErrorMessage(err);
+      },
+    });
+  }
+
+  OnEditTaskClicked(id: string | undefined) {
+    this.currentTaskId = id;
+
+    this.showCreateTaskForm = true;
+    this.editMode = true;
+
+    this.selectedTask = this.allTasks.find((task) => {
+      return task.id === id;
+    });
+  }
+
+  SearchTask(searchForm: NgForm) {
+    this.searchQuery = searchForm.value.searchQuery;
+    if (this.searchQuery) {
+      this.searchQuery = this.searchQuery.toLowerCase();
+    }
+
+    if (searchForm.valid || this.searchQuery === "") {
+      this.searchedTasks = this.allTasks.filter(
+        (task) =>
+          task.title.toLowerCase().includes(this.searchQuery) ||
+          task.assignedTo.toLowerCase().includes(this.searchQuery)
+      );
+    }
+
+    searchForm.reset();
+    this.organizetasksByStatus();
   }
 
   private fetchAllTasks() {
@@ -123,25 +190,6 @@ export class OverviewComponent implements OnInit {
     }, 3000);
   }
 
-  DeleteTask(id: string | undefined) {
-    this.taskService.DeleteTask(id);
-  }
-
-  DeleteAllTask() {
-    this.taskService.DeleteAllTasks();
-  }
-
-  OnEditTaskClicked(id: string | undefined) {
-    this.currentTaskId = id;
-
-    this.showCreateTaskForm = true;
-    this.editMode = true;
-
-    this.selectedTask = this.allTasks.find((task) => {
-      return task.id === id;
-    });
-  }
-
   private organizetasksByStatus() {
     // return this.searchedTasks.reduce((acc, task) => {
     //   if (!acc[task.status]) {
@@ -156,23 +204,5 @@ export class OverviewComponent implements OnInit {
         (task) => task.status === status
       );
     });
-  }
-
-  SearchTask(searchForm: NgForm) {
-    this.searchQuery = searchForm.value.searchQuery;
-    if (this.searchQuery) {
-      this.searchQuery = this.searchQuery.toLowerCase();
-    }
-
-    if (searchForm.valid || this.searchQuery === "") {
-      this.searchedTasks = this.allTasks.filter(
-        (task) =>
-          task.title.toLowerCase().includes(this.searchQuery) ||
-          task.assignedTo.toLowerCase().includes(this.searchQuery)
-      );
-    }
-
-    searchForm.reset();
-    this.organizetasksByStatus();
   }
 }

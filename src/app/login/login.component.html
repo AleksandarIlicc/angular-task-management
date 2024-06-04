@@ -20,9 +20,13 @@
         placeholder="Email address"
         name="email"
         [(ngModel)]="email"
+        #emailinput="ngModel"
         required
         email
       />
+      <p class="error-message" *ngIf="emailinput.invalid && emailinput.touched">
+        *Email filed is required.
+      </p>
     </div>
     <div class="form-input">
       <label>Password</label>
@@ -31,9 +35,22 @@
         placeholder="Password"
         name="password"
         [(ngModel)]="password"
+        #passwordinput="ngModel"
         required
         minlength="8"
       />
+      <p
+        class="error-message"
+        *ngIf="passwordinput.invalid && passwordinput.touched"
+      >
+        *Password filed is required.
+      </p>
+      <p
+        class="error-message"
+        *ngIf="passwordinput.value?.length < 8 && passwordinput.touched"
+      >
+        *Password must contain more than 8 characters.
+      </p>
     </div>
 
     <button type="submit" class="app-login-btn" [disabled]="authForm.invalid">

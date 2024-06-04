@@ -56,72 +56,39 @@
 
   <app-loader *ngIf="isLoading"></app-loader>
 
-  <div class="dashboard-item-container">
-    <div
-      style="text-align: center"
-      *ngIf="allTasks.length < 1 || searchedTasks.length < 1"
-    >
-      <h2>No tasks found.</h2>
-    </div>
+  <div
+    style="text-align: center"
+    *ngIf="allTasks.length < 1 || searchedTasks.length < 1"
+  >
+    <h2>No tasks found.</h2>
+  </div>
 
-    <ng-container *ngIf="!isLoading">
-      <ng-container *ngFor="let status of statuses">
-        <div
-          *ngIf="tasksByStatus[status]?.length > 0"
-          class="task-status-container"
-          setTaskBackground
-          [status]="status"
-        >
-          <div class="task-status-header">
-            <span class="number-of-task">{{
-              tasksByStatus[status].length
-            }}</span>
-            <h3>{{ status | uppercase }}</h3>
-          </div>
-
-          <div
-            class="task-item"
-            *ngFor="let task of tasksByStatus[status] || []"
-          >
-            <div class="task-title">
-              <h3>{{ task.title }}</h3>
-            </div>
-            <p><b>Assigned to: </b>{{ task.assignedTo }}</p>
-            <p><b>Priority: </b>{{ task.priority }}</p>
-            <p><b>Status: </b>{{ task.status }}</p>
-            <div class="task-action-icons">
-              <button
-                class="task-action-btn"
-                title="Detail"
-                (click)="showCurrentTaskDetails(task.id)"
-              >
-                <i class="fa fa-info-circle" aria-hidden="true"></i>
-              </button>
-              <button
-                class="task-action-btn"
-                title="Edit"
-                (click)="OnEditTaskClicked(task.id)"
-              >
-                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-              </button>
-              <button
-                class="task-action-btn"
-                title="Delete"
-                (click)="DeleteTask(task.id)"
-              >
-                <i class="fa fa-trash" aria-hidden="true"></i>
-              </button>
-            </div>
-          </div>
-
-          <button
-            class="create-task-btn in-table"
-            (click)="OpenCreateTaskForm()"
-          >
-            Add new task
-          </button>
+  <div class="dashboard-item-container" *ngIf="!isLoading">
+    <ng-container *ngFor="let status of statuses">
+      <div class="task-status-container" setTaskBackground [status]="status">
+        <div class="task-status-header">
+          <span class="number-of-task">{{ tasksByStatus[status].length }}</span>
+          <h3>{{ status | uppercase }}</h3>
         </div>
-      </ng-container>
+
+        <ng-container *ngIf="tasksByStatus[status]?.length < 1">
+          <p class="no-tasks-yet">No tasks have been created yet.</p>
+        </ng-container>
+
+        <ng-container *ngFor="let task of tasksByStatus[status] || []">
+          <app-task-card
+            [task]="task"
+            [currentUser]="currentUser"
+            (editTask)="OnEditTaskClicked(task.id)"
+            (deleteTask)="DeleteTask(task.id)"
+            (showDetails)="showCurrentTaskDetails(task.id)"
+          ></app-task-card>
+        </ng-container>
+
+        <button class="create-task-btn in-table" (click)="OpenCreateTaskForm()">
+          Add new task
+        </button>
+      </div>
     </ng-container>
   </div>
 </div>
