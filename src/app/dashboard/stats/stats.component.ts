@@ -52,7 +52,7 @@ export class StatsComponent implements OnInit {
       options: {
         plugins: {
           legend: {
-            display: false, // Postavljamo display na false da sakrijemo legendu
+            display: false,
           },
         },
       },
