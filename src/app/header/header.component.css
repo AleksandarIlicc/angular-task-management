@@ -17,12 +17,14 @@
   text-align: right;
 
   @media only screen and (max-width: 48em) {
-    position: fixed;
-    top: -100%;
-    left: 0;
     height: 50vh;
     width: 100%;
-    transition: top 0.3s ease;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translateY(-150%);
+    transition: transform 0.3s ease;
+    z-index: 100;
 
     flex-direction: column;
     justify-content: center;
@@ -32,7 +34,7 @@
 }
 
 .app-header-navbar.open {
-  top: 0;
+  transform: translateY(0);
 }
 
 .app-header-navbar a {
@@ -67,6 +69,11 @@
 
 .dropdown {
   position: relative;
+
+  @media only screen and (max-width: 48em) {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .dropdown .dropbtn {
@@ -79,22 +86,46 @@
   margin: 0;
 }
 
-.navbar a:hover,
-.dropdown:hover .dropbtn {
+.navbar a:hover {
   background-color: #fff;
+}
+
+@media only screen and (min-width: 48em) {
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
 }
 
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #f9f9f9;
   min-width: 16rem;
-  box-shadow: 0px 0.8rem 1.6rem 0px rgba(0, 0, 0, 0.2);
-  z-index: 1;
+  background-color: #f9f9f9;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+  border-radius: 0.3rem;
+  z-index: 100;
+}
+
+@media only screen and (max-width: 48em) {
+  .dropdown-content {
+    display: block;
+    position: relative;
+    top: 0;
+    left: 0;
+    max-height: 0;
+    box-shadow: none;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: all 0.3s ease;
+  }
+  .dropdown-content.open {
+    max-height: 100%;
+    transform: scaleY(1);
+  }
 }
 
 .dropdown-content a {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   float: none;
   color: black;
   padding: 12px 16px;
@@ -105,26 +136,4 @@
 
 .dropdown-content a:hover {
   background-color: #ddd;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-@media only screen and (max-width: 48em) {
-  .dropdown .dropbtn {
-    width: 100%;
-    text-align: left;
-    padding: 1.2rem 2rem;
-  }
-
-  .dropdown-content {
-    position: static;
-    width: 100%;
-    box-shadow: none;
-  }
-
-  .dropdown-content a {
-    padding: 1.2rem 2rem;
-  }
 }

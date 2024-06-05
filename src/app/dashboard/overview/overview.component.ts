@@ -28,7 +28,6 @@ export class OverviewComponent implements OnInit {
   isLoading: boolean = false;
   errorMessage: string | null = null;
   editMode: boolean = false;
-  errorSub: Subscription;
 
   statuses = ["open", "started", "in-progress", "complete"];
 
@@ -45,10 +44,6 @@ export class OverviewComponent implements OnInit {
     this.authService.user.subscribe((user) => {
       this.currentUser = user?.email;
     });
-  }
-
-  ngOnDestroy() {
-    this.errorSub.unsubscribe();
   }
 
   OpenCreateTaskForm() {

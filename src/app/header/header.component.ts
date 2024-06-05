@@ -13,6 +13,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   authService: AuthService = inject(AuthService);
   isLoggedIn: boolean = false;
   isMenuOpen: boolean = false;
+  isDropdownOpen: boolean = false;
   private userSubject: Subscription;
 
   navLinks: NavLink[] = [
@@ -59,5 +60,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       return this.isLoggedIn;
     }
     return true;
+  }
+
+  toggleDropdownMenu() {
+    this.isDropdownOpen = !this.isDropdownOpen;
   }
 }
