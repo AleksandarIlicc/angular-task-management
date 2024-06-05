@@ -2,7 +2,6 @@ import { Component, OnInit, inject } from "@angular/core";
 import { Task } from "../../Model/Task";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { TaskService } from "../../Services/task.service";
-import { Subject, Subscription } from "rxjs";
 import { NgForm } from "@angular/forms";
 import { AuthService } from "src/app/Services/auth.service";
 
