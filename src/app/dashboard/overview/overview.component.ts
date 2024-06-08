@@ -41,7 +41,7 @@ export class OverviewComponent implements OnInit {
     this.fetchAllTasks();
 
     this.authService.user.subscribe((user) => {
-      this.currentUser = user?.email;
+      this.currentUser = user?.fullname;
     });
   }
 
@@ -61,7 +61,7 @@ export class OverviewComponent implements OnInit {
 
   showCurrentTaskDetails(id: string | undefined) {
     this.showTaskDetails = true;
-    this.taskService.getTaskDetails(id).subscribe({
+    this.taskService.GetTaskDetails(id).subscribe({
       next: (data: Task) => {
         this.currentTask = data;
       },

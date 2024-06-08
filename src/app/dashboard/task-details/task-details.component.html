@@ -1,38 +1,52 @@
 <div class="overlay">
-  <div class="popup">
-    <h2>{{ currentTask?.title }}</h2>
-    <hr />
+  <div class="popup popup-task-detail">
     <button class="close" href="#" (click)="OnCloseTaskDetail()">
       &times;
     </button>
 
-    <div class="content">
-      <section class="container">
-        <h3>Description</h3>
-        <p class="task-desc">
-          {{ currentTask?.desc }}
-        </p>
-        <div style="display: flex; margin-top: 20px">
-          <div class="task-detail">
-            <strong>Assigned To: </strong>
-            {{ currentTask?.assignedTo }}
+    <ng-container *ngIf="!currentTask">
+      <p class="no-task">Please select a task to view the details.</p>
+    </ng-container>
+
+    <ng-container *ngIf="currentTask">
+      <h2>{{ currentTask?.title }}</h2>
+      <hr />
+
+      <div class="content">
+        <section class="container">
+          <h3>Description</h3>
+          <p class="task-desc">
+            {{ currentTask?.desc }}
+          </p>
+
+          <div class="task-detail-container">
+            <div class="task-detail">
+              <strong>Assigned To: </strong>
+              {{ currentTask?.assignedTo }}
+            </div>
+            <div class="task-detail">
+              <strong>Created At: </strong>
+              {{ currentTask?.createdAt }}
+            </div>
           </div>
-          <div class="task-detail">
-            <strong>Created At: </strong>
-            {{ currentTask?.createdAt }}
+          <div class="task-detail-container">
+            <div class="task-detail">
+              <strong>Priority: </strong>
+              {{ currentTask?.priority }}
+            </div>
+            <div class="task-detail">
+              <strong>Current Status: </strong>
+              {{ currentTask?.status }}
+            </div>
           </div>
-        </div>
-        <div style="display: flex; margin-top: 20px">
-          <div class="task-detail">
-            <strong>Priority: </strong>
-            {{ currentTask?.priority }}
+          <div class="task-detail-container">
+            <div class="task-detail">
+              <strong>Author: </strong>
+              {{ currentTask?.author }}
+            </div>
           </div>
-          <div class="task-detail">
-            <strong>Current Status: </strong>
-            {{ currentTask?.status }}
-          </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
+    </ng-container>
   </div>
 </div>

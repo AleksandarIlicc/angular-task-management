@@ -2,7 +2,6 @@ import { Injectable, inject } from "@angular/core";
 import {
   HttpClient,
   HttpHeaders,
-  HttpEventType,
   HttpErrorResponse,
 } from "@angular/common/http";
 import { Task } from "../Model/Task";
@@ -30,7 +29,7 @@ export class TaskService {
       );
   }
 
-  getTaskDetails(id: string | undefined) {
+  GetTaskDetails(id: string | undefined) {
     return this.http
       .get(
         "https://angulartaskmanagement-default-rtdb.europe-west1.firebasedatabase.app/tasks/" +
@@ -83,6 +82,7 @@ export class TaskService {
   }
 
   private transformResponseToArray(response: any): Task[] {
+    console.log(response);
     const tasks: Task[] = [];
     for (const key in response) {
       if (response.hasOwnProperty(key)) {

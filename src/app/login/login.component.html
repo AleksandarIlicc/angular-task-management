@@ -13,6 +13,20 @@
     (ngSubmit)="onFormSubmitted(authForm)"
     *ngIf="!isLoading"
   >
+    <div class="form-input" *ngIf="!isLoginMode">
+      <label>Full Name</label>
+      <input
+        type="text"
+        placeholder="Full name"
+        name="fullname"
+        [(ngModel)]="fullname"
+        #fninput="ngModel"
+        required
+      />
+      <p class="error-message" *ngIf="fninput.invalid && fninput.touched">
+        *Full name filed is required.
+      </p>
+    </div>
     <div class="form-input">
       <label>Email Address</label>
       <input

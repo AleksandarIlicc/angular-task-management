@@ -31,15 +31,23 @@
             </p>
           </div>
           <div class="column">
-            <div class="input-box">
+            <div class="select-box">
               <label>Assigned To</label>
-              <input
-                type="text"
+              <select
                 name="assignedTo"
+                [ngModel]="defaultAssignedTo"
                 required
-                ngModel
                 #assignedto="ngModel"
-              />
+              >
+                <option hidden>Assigned to</option>
+                <option
+                  *ngFor="let user of usersList"
+                  id="user.id"
+                  [value]="user.fullname"
+                >
+                  {{ user.fullname }}
+                </option>
+              </select>
               <p
                 class="error-message"
                 *ngIf="assignedto.touched && assignedto.invalid"
@@ -67,6 +75,7 @@
           <div class="input-box address">
             <div class="column">
               <div class="select-box">
+                <label>Priority</label>
                 <select
                   name="priority"
                   [ngModel]="defaultPriority"
@@ -74,10 +83,12 @@
                   #priority="ngModel"
                 >
                   <option hidden>Priority</option>
-                  <option value="low">Low</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
-                  <option value="critical">Critical</option>
+                  <option
+                    *ngFor="let priority of priorityOptions"
+                    value="priority"
+                  >
+                    {{ priority }}
+                  </option>
                 </select>
                 <p
                   class="error-message"
@@ -87,6 +98,7 @@
                 </p>
               </div>
               <div class="select-box">
+                <label>Status</label>
                 <select
                   name="status"
                   [ngModel]="defaultStatus"

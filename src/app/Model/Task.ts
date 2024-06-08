@@ -1,12 +1,10 @@
-export class Task {
-  constructor(
-    public title: string,
-    public desc: string,
-    public assignedTo: string,
-    public createdAt: string,
-    public priority: string,
-    public status: string,
-    public author: string,
-    public id?: string
-  ) {}
+export interface Task {
+  title: string;
+  desc: string;
+  assignedTo: string;
+  createdAt: string;
+  priority: string;
+  status: string;
+  author: string;
+  id?: string;
 }

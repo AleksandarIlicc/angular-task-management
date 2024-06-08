@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
   errorMessage: string | null = null;
   isSubmitted: boolean = false;
   authObs: Observable<AuthResponse>;
+  fullname: string = "";
   email: string = "";
   password: string = "";
 
@@ -28,6 +29,7 @@ export class LoginComponent implements OnInit {
 
   onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
+    this.authForm.reset();
   }
 
   onFormSubmitted(form: NgForm) {
@@ -35,6 +37,7 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    const fullname = this.fullname;
     const email = form.value.email;
     const password = form.value.password;
 
@@ -43,7 +46,7 @@ export class LoginComponent implements OnInit {
     if (this.isLoginMode) {
       this.authObs = this.authService.login(email, password);
     } else {
-      this.authObs = this.authService.signup(email, password);
+      this.authObs = this.authService.signup(fullname, email, password);
     }
 
     this.authObs.subscribe({
@@ -58,7 +61,7 @@ export class LoginComponent implements OnInit {
   }
 
   canExit() {
-    if ((this.email || this.password) && !this.isSubmitted) {
+    if ((this.email || this.password || this.fullname) && !this.isSubmitted) {
       return confirm("You have unsaved changes. Do you want to navigate away?");
     } else {
       return true;

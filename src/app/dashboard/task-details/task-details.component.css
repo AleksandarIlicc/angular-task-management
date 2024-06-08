@@ -2,7 +2,12 @@
   font-size: 1.4rem;
 }
 
+.popup-task-detail {
+  height: auto;
+}
+
 .task-desc {
+  margin-top: 2rem;
   font-size: 1.2rem;
 
   @media only screen and (max-width: 30em) {
@@ -10,7 +15,18 @@
   }
 }
 
+.task-detail-container {
+  display: flex;
+  margin-top: 4rem;
+}
+
 .task-detail {
   width: 50%;
   font-size: 1.4rem;
+}
+
+.no-task {
+  font-size: 1.6rem;
+  margin-top: 2rem;
+  text-align: center;
 }
