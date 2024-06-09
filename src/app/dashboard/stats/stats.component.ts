@@ -23,10 +23,17 @@ export class StatsComponent implements OnInit {
   }
 
   private countTasksByStatus(): void {
+    this.taskCountsByStatus = {
+      open: 0,
+      started: 0,
+      "in-progress": 0,
+      complete: 0,
+    };
+
     this.taskCountsByStatus = this.tasks.reduce((counts, task) => {
       counts[task.status] = (counts[task.status] || 0) + 1;
       return counts;
-    }, {});
+    }, this.taskCountsByStatus);
   }
 
   private renderChart(): void {
@@ -41,10 +48,10 @@ export class StatsComponent implements OnInit {
           {
             data: Object.values(this.taskCountsByStatus),
             backgroundColor: [
-              "#43e870", // Open
-              "#ffa933", // Started
-              "#336bff", // In Progress
-              "#ff5733", // Complete
+              "#ff5733", // Open
+              "#336bff", // Started
+              "#ffa933", // In Progress
+              "#43e870", // Complete
             ],
           },
         ],
