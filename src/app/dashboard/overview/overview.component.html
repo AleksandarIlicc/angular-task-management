@@ -13,6 +13,13 @@
   [currentTask]="currentTask"
 ></app-task-details>
 
+<app-delete-task-dialog
+  *ngIf="showTaskDeleteModal"
+  (CloseTaskDeleteModal)="CloseTaskDeleteDialog()"
+  (SuccessDeletedTask)="SuccessDeletedTask()"
+  [currentTaskId]="taskToDeleteId"
+></app-delete-task-dialog>
+
 <div class="dashboard-container">
   <div class="dashboard-header">
     <div class="dashboard-header--left">

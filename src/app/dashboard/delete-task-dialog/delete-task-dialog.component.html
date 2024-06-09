@@ -1,0 +1,18 @@
+<app-snackbar [errorMessage]="errorMessage" *ngIf="errorMessage"></app-snackbar>
+
+<div class="overlay">
+  <div class="popup-task-dialog">
+    <button class="close" href="#" (click)="OnCloseTaskDeleteDialog()">
+      &times;
+    </button>
+
+    <div class="delete-task-dialog">
+      <h2>Confirm Deletion</h2>
+      <p>Are you sure you want to delete this task?</p>
+      <div class="btn-group">
+        <button class="btn btn-delete" (click)="deleteTask()">Yes</button>
+        <button class="btn btn-cancel" (click)="cancelDeleteTask()">No</button>
+      </div>
+    </div>
+  </div>
+</div>

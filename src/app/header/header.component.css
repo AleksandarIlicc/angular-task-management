@@ -42,6 +42,7 @@
   margin: 0px 1rem;
   text-decoration: none;
   color: #28282b;
+  cursor: pointer;
 }
 
 .fas.fa-bars {

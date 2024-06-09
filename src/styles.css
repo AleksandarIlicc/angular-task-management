@@ -76,7 +76,8 @@ p {
   font-family: Tahoma, Arial, sans-serif;
 }
 
-.popup .close {
+.popup .close,
+.popup-task-dialog .close {
   font-size: 3rem;
   font-weight: bold;
   position: absolute;

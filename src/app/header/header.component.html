@@ -14,7 +14,6 @@
           (click)="OnCloseMenu(); toggleDropdownMenu()"
           >{{ link.label }}</a
         >
-
         <ng-container *ngIf="link.isDropdown">
           <div class="dropdown">
             <button class="dropbtn" (click)="toggleDropdownMenu()">

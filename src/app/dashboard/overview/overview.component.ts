@@ -17,10 +17,12 @@ export class OverviewComponent implements OnInit {
 
   showCreateTaskForm: boolean = false;
   showTaskDetails: boolean = false;
+  showTaskDeleteModal: boolean = false;
   allTasks: Task[] = [];
   selectedTask: Task;
   currentTask: Task | null = null;
   currentTaskId: string = "";
+  taskToDeleteId: string = "";
   currentUser: string | null = null;
   searchedTasks: Task[] = [];
   searchQuery: string = "";
@@ -59,6 +61,10 @@ export class OverviewComponent implements OnInit {
     };
   }
 
+  OpenTaskDeleteDialog() {
+    this.showTaskDeleteModal = true;
+  }
+
   showCurrentTaskDetails(id: string | undefined) {
     this.showTaskDetails = true;
     this.taskService.GetTaskDetails(id).subscribe({
@@ -72,7 +78,17 @@ export class OverviewComponent implements OnInit {
     this.showTaskDetails = closeForm;
   }
 
+  CloseTaskDeleteDialog() {
+    this.showTaskDeleteModal = false;
+  }
+
+  SuccessDeletedTask() {
+    this.showTaskDeleteModal = false;
+    this.fetchAllTasks();
+  }
+
   CloseCreateTaskForm(closeForm: boolean) {
+    this.currentTaskId = "";
     this.showCreateTaskForm = closeForm;
   }
 
@@ -105,14 +121,8 @@ export class OverviewComponent implements OnInit {
   }
 
   DeleteTask(id: string | undefined) {
-    this.taskService.DeleteTask(id).subscribe({
-      next: () => {
-        this.fetchAllTasks();
-      },
-      error: (err) => {
-        this.setErrorMessage(err);
-      },
-    });
+    this.taskToDeleteId = id;
+    this.OpenTaskDeleteDialog();
   }
 
   DeleteAllTask() {

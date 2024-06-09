@@ -1,26 +1,26 @@
 .sb {
-  min-width: 35rem; /* Set a default minimum width */
-  margin-left: -12.5rem; /* Divide value of min-width by 2 */
-  text-align: center; /* Centered text */
-  border-radius: 2px; /* Rounded borders */
-  padding: 1.6rem; /* Padding */
+  min-width: 35rem;
+  text-align: center;
+  border-radius: 2px;
+  padding: 1.6rem;
   border-radius: 5px;
-  position: fixed; /* Sit on top of the screen */
-  z-index: 1; /* Add a z-index if needed */
-  left: 50%; /* Center the snackbar */
-  top: 4rem; /* 30px from the bottom */
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  top: 4rem;
+  transform: translateX(-50%);
   -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
   animation: fadein 0.5s, fadeout 0.5s 2.5s;
 }
 
 .sb-error {
-  background-color: #e74c3c; /* Black background color */
-  color: #fff; /* White text color */
+  background-color: #e74c3c;
+  color: #fff;
 }
 
 .sb-success {
-  background-color: #1abc9c; /* Black background color */
-  color: #28282b; /* White text color */
+  background-color: #1abc9c;
+  color: #28282b;
 }
 
 /* Animations to fade the snackbar in and out */
