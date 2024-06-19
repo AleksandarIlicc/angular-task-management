@@ -57,35 +57,41 @@
   <hr />
 
   <app-snackbar
-    [errorMessage]="errorMessage"
-    *ngIf="errorMessage"
+    [errorMessage]="errorMessage$ | async"
+    *ngIf="errorMessage$ | async"
   ></app-snackbar>
 
-  <app-loader *ngIf="isLoading"></app-loader>
+  <app-loader *ngIf="isLoading$ | async"></app-loader>
 
   <div
     style="text-align: center"
-    *ngIf="allTasks.length < 1 || searchedTasks.length < 1"
+    *ngIf="
+      (allTasks$ | async)?.length < 1 || (filteredTasks$ | async)?.length < 1
+    "
   >
     <h2>No tasks found.</h2>
   </div>
 
-  <div class="dashboard-item-container" *ngIf="!isLoading">
+  <div class="dashboard-item-container" *ngIf="!(isLoading$ | async)">
     <ng-container *ngFor="let status of statuses">
       <div class="task-status-container" setTaskBackground [status]="status">
         <div class="task-status-header">
-          <span class="number-of-task">{{ tasksByStatus[status].length }}</span>
+          <span class="number-of-task">{{
+            (tasksByStatus$ | async)[status]?.length
+          }}</span>
           <h3>{{ status | uppercase }}</h3>
         </div>
 
-        <ng-container *ngIf="tasksByStatus[status]?.length < 1">
+        <ng-container *ngIf="(tasksByStatus$ | async)[status]?.length < 1">
           <p class="no-tasks-yet">No tasks have been created yet.</p>
         </ng-container>
 
-        <ng-container *ngFor="let task of tasksByStatus[status] || []">
+        <ng-container
+          *ngFor="let task of (tasksByStatus$ | async)[status] || []"
+        >
           <app-task-card
             [task]="task"
-            [currentUser]="currentUser"
+            [currentUser]="currentUser$ | async"
             (editTask)="OnEditTaskClicked(task.id)"
             (deleteTask)="DeleteTask(task.id)"
             (showDetails)="showCurrentTaskDetails(task.id)"

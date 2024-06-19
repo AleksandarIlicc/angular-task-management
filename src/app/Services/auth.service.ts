@@ -10,7 +10,7 @@ import { environment } from "src/environments/environment";
 @Injectable()
 export class AuthService {
   http: HttpClient = inject(HttpClient);
-  user = new BehaviorSubject<User>(null);
+  user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
   router: Router = inject(Router);
   private tokenExpiretimer: any;
 

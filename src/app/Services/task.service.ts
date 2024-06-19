@@ -82,7 +82,6 @@ export class TaskService {
   }
 
   private transformResponseToArray(response: any): Task[] {
-    console.log(response);
     const tasks: Task[] = [];
     for (const key in response) {
       if (response.hasOwnProperty(key)) {

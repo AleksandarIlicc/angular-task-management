@@ -1,9 +1,10 @@
 import { Component, OnInit, inject } from "@angular/core";
-import { Task } from "../../Model/Task";
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { TaskService } from "../../Services/task.service";
+import { HttpErrorResponse } from "@angular/common/http";
+import { BehaviorSubject, map, take } from "rxjs";
 import { NgForm } from "@angular/forms";
+import { TaskService } from "../../Services/task.service";
 import { AuthService } from "src/app/Services/auth.service";
+import { Task } from "../../Model/Task";
 
 @Component({
   selector: "app-overview",
@@ -11,61 +12,76 @@ import { AuthService } from "src/app/Services/auth.service";
   styleUrls: ["./overview.component.css"],
 })
 export class OverviewComponent implements OnInit {
-  http: HttpClient = inject(HttpClient);
   taskService: TaskService = inject(TaskService);
   authService: AuthService = inject(AuthService);
 
   showCreateTaskForm: boolean = false;
   showTaskDetails: boolean = false;
   showTaskDeleteModal: boolean = false;
-  allTasks: Task[] = [];
-  selectedTask: Task;
+  editMode: boolean = false;
+
+  // allTasks: Task[] = [];
+  allTasks$: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>([]);
+  // filteredTasks: Task[] = [];
+  filteredTasks$: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>([]);
+  // currentUser: string | null = null;
+  currentUser$: BehaviorSubject<string | null> = new BehaviorSubject<
+    string | null
+  >(null);
+  // isLoading: boolean = false;
+  isLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  // errorMessage: string | null = null;
+  errorMessage$: BehaviorSubject<string | null> = new BehaviorSubject<
+    string | null
+  >(null);
+
+  selectedTask: Task = {
+    title: "",
+    desc: "",
+    assignedTo: "",
+    createdAt: "",
+    priority: "",
+    status: "",
+    author: "",
+  };
   currentTask: Task | null = null;
   currentTaskId: string = "";
   taskToDeleteId: string = "";
-  currentUser: string | null = null;
-  searchedTasks: Task[] = [];
   searchQuery: string = "";
-  isLoading: boolean = false;
-  errorMessage: string | null = null;
-  editMode: boolean = false;
 
   statuses = ["open", "started", "in-progress", "complete"];
 
-  tasksByStatus: { [key: string]: Task[] } = {
-    open: [],
-    started: [],
-    "in-progress": [],
-    complete: [],
-  };
+  tasksByStatus$: BehaviorSubject<{ [key: string]: Task[] }> =
+    new BehaviorSubject<{ [key: string]: Task[] }>({
+      open: [],
+      started: [],
+      "in-progress": [],
+      complete: [],
+    });
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.fetchAllTasks();
 
-    this.authService.user.subscribe((user) => {
-      this.currentUser = user?.fullname;
-    });
+    // this.authService.user.subscribe((user) => {
+    //   this.currentUser = user?.fullname || null;
+    // });
+    this.authService.user
+      .pipe(map((user) => user?.fullname || null))
+      .subscribe((fullname) => {
+        this.currentUser$.next(fullname);
+      });
   }
 
-  OpenCreateTaskForm() {
+  OpenCreateTaskForm(): void {
     this.showCreateTaskForm = true;
     this.editMode = false;
-    this.selectedTask = {
-      title: "",
-      desc: "",
-      assignedTo: "",
-      createdAt: "",
-      priority: "",
-      status: "",
-      author: "",
-    };
   }
 
-  OpenTaskDeleteDialog() {
+  OpenTaskDeleteDialog(): void {
     this.showTaskDeleteModal = true;
   }
 
-  showCurrentTaskDetails(id: string | undefined) {
+  showCurrentTaskDetails(id: string | undefined): void {
     this.showTaskDetails = true;
     this.taskService.GetTaskDetails(id).subscribe({
       next: (data: Task) => {
@@ -74,58 +90,62 @@ export class OverviewComponent implements OnInit {
     });
   }
 
-  CloseTaskDetails(closeForm: boolean) {
+  CloseTaskDetails(closeForm: boolean): void {
     this.showTaskDetails = closeForm;
   }
 
-  CloseTaskDeleteDialog() {
+  CloseTaskDeleteDialog(): void {
     this.showTaskDeleteModal = false;
   }
 
-  SuccessDeletedTask() {
+  SuccessDeletedTask(): void {
     this.showTaskDeleteModal = false;
     this.fetchAllTasks();
   }
 
-  CloseCreateTaskForm(closeForm: boolean) {
+  CloseCreateTaskForm(closeForm: boolean): void {
     this.currentTaskId = "";
     this.showCreateTaskForm = closeForm;
   }
 
-  CreateOrUpdateTask(data: Task) {
-    const task = { ...data, author: this.currentUser };
+  CreateOrUpdateTask(data: Task): void {
+    // const currentUser = this.currentUser$.getValue();
 
-    if (!this.editMode) {
-      this.taskService.CreateTask(task).subscribe({
-        next: (data) => {
-          this.fetchAllTasks();
-        },
-        error: (err) => {
-          this.setErrorMessage(err);
-        },
-      });
-    } else {
-      this.taskService.UpdateTask(this.currentTaskId, task).subscribe({
-        next: (data) => {
-          this.fetchAllTasks();
-        },
-        error: (err) => {
-          this.setErrorMessage(err);
-        },
-      });
-    }
+    this.currentUser$.pipe(take(1)).subscribe((currentUser) => {
+      const task = { ...data, author: currentUser };
+
+      if (!this.editMode) {
+        this.taskService.CreateTask(task).subscribe({
+          next: () => {
+            this.fetchAllTasks();
+          },
+          error: (err) => {
+            this.setErrorMessage(err);
+          },
+        });
+      } else {
+        this.taskService.UpdateTask(this.currentTaskId, task).subscribe({
+          next: () => {
+            this.fetchAllTasks();
+          },
+          error: (err) => {
+            this.setErrorMessage(err);
+          },
+        });
+      }
+    });
   }
 
-  FetchAllTaskClicked() {
+  FetchAllTaskClicked(): void {
     this.fetchAllTasks();
   }
 
-  DeleteTask(id: string | undefined) {
+  DeleteTask(id: string | undefined): void {
     this.taskToDeleteId = id;
     this.OpenTaskDeleteDialog();
   }
 
-  DeleteAllTask() {
+  DeleteAllTask(): void {
     this.taskService.DeleteAllTasks().subscribe({
       next: () => {
         this.fetchAllTasks();
@@ -136,77 +156,104 @@ export class OverviewComponent implements OnInit {
     });
   }
 
-  OnEditTaskClicked(id: string | undefined) {
+  OnEditTaskClicked(id: string | undefined): void {
     this.currentTaskId = id;
 
     this.showCreateTaskForm = true;
     this.editMode = true;
 
-    this.selectedTask = this.allTasks.find((task) => {
-      return task.id === id;
+    // this.selectedTask = this.allTasks.find((task) => {
+    //   return task.id === id;
+    // });
+    this.allTasks$.subscribe((allTasks) => {
+      this.selectedTask = allTasks.find((task) => task.id === id);
     });
   }
 
-  SearchTask(searchForm: NgForm) {
-    this.searchQuery = searchForm.value.searchQuery;
-    if (this.searchQuery) {
-      this.searchQuery = this.searchQuery.toLowerCase();
-    }
+  SearchTask(searchForm: NgForm): void {
+    this.searchQuery = searchForm.value.searchQuery?.toLowerCase() || "";
 
     if (searchForm.valid || this.searchQuery === "") {
-      this.searchedTasks = this.allTasks.filter(
-        (task) =>
-          task.title.toLowerCase().includes(this.searchQuery) ||
-          task.assignedTo.toLowerCase().includes(this.searchQuery)
-      );
+      // this.filteredTasks = this.allTasks.filter(
+      //   (task) =>
+      //     task.title.toLowerCase().includes(this.searchQuery) ||
+      //     task.assignedTo.toLowerCase().includes(this.searchQuery)
+      // );
+
+      const filteredTasks = this.allTasks$
+        .getValue()
+        .filter(
+          (task) =>
+            task.title.toLowerCase().includes(this.searchQuery) ||
+            task.assignedTo.toLowerCase().includes(this.searchQuery)
+        );
+      this.filteredTasks$.next(filteredTasks);
+      this.organizeTasksByStatus();
     }
 
     searchForm.reset();
-    this.organizetasksByStatus();
   }
 
   private fetchAllTasks() {
-    this.isLoading = true;
+    // this.isLoading = true;
+    this.isLoading$.next(true);
 
     this.taskService.GetAlltasks().subscribe({
       next: (tasks) => {
-        this.allTasks = tasks;
-        this.searchedTasks = tasks;
-        this.organizetasksByStatus();
-        this.isLoading = false;
+        // this.allTasks = tasks;
+        // this.filteredTasks = tasks;
+        this.allTasks$.next(tasks);
+        this.filteredTasks$.next(tasks);
+        this.organizeTasksByStatus();
+        // this.isLoading = false;
+        this.isLoading$.next(false);
       },
       error: (error) => {
         this.setErrorMessage(error);
-        this.isLoading = false;
+        // this.isLoading = false;
+        this.isLoading$.next(false);
       },
     });
   }
 
   private setErrorMessage(err: HttpErrorResponse) {
     if (err.error.error === "Permission denied") {
-      this.errorMessage = "You do not have permisssion to perform this action";
+      // this.errorMessage = "You do not have permisssion to perform this action";
+      this.errorMessage$.next(
+        "You do not have permisssion to perform this action"
+      );
     } else {
-      this.errorMessage = err.message;
+      // this.errorMessage = err.message;
+      this.errorMessage$.next(err.message);
     }
 
     setTimeout(() => {
-      this.errorMessage = null;
+      // this.errorMessage = null;
+      this.errorMessage$.next(null);
     }, 3000);
   }
 
-  private organizetasksByStatus() {
-    // return this.searchedTasks.reduce((acc, task) => {
-    //   if (!acc[task.status]) {
-    //     acc[task.status] = [];
-    //   }
-    //   acc[task.status].push(task);
-    //   return acc;
-    // }, {});
+  // private organizeTasksByStatus() {
+  //   this.statuses.forEach((status) => {
+  //     this.tasksByStatus$[status] = this.filteredTasks$.pipe(
+  //       map((tasks) => tasks.filter((task) => task.status === status))
+  //     );
+  //   });
+  // }
+  private organizeTasksByStatus() {
+    const organizedTasks = {
+      open: [],
+      started: [],
+      "in-progress": [],
+      complete: [],
+    };
 
-    this.statuses.forEach((status) => {
-      this.tasksByStatus[status] = this.searchedTasks.filter(
-        (task) => task.status === status
-      );
+    const allTasks = this.filteredTasks$.getValue();
+
+    allTasks.forEach((task) => {
+      organizedTasks[task.status].push(task);
     });
+
+    this.tasksByStatus$.next(organizedTasks);
   }
 }
