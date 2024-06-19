@@ -90,8 +90,8 @@ export class OverviewComponent implements OnInit {
     });
   }
 
-  CloseTaskDetails(closeForm: boolean): void {
-    this.showTaskDetails = closeForm;
+  CloseTaskDetails(): void {
+    this.showTaskDetails = false;
   }
 
   CloseTaskDeleteDialog(): void {
@@ -103,9 +103,9 @@ export class OverviewComponent implements OnInit {
     this.fetchAllTasks();
   }
 
-  CloseCreateTaskForm(closeForm: boolean): void {
+  CloseCreateTaskForm(): void {
     this.currentTaskId = "";
-    this.showCreateTaskForm = closeForm;
+    this.showCreateTaskForm = false;
   }
 
   CreateOrUpdateTask(data: Task): void {

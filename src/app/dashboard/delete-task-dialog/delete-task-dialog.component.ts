@@ -17,7 +17,7 @@ export class DeleteTaskDialogComponent {
 
   errorMessage: string | null = null;
 
-  deleteTask() {
+  onDeleteTask() {
     this.taskService.DeleteTask(this.currentTaskId).subscribe({
       next: () => {
         this.SuccessDeletedTask.emit();
@@ -28,11 +28,11 @@ export class DeleteTaskDialogComponent {
     });
   }
 
-  cancelDeleteTask() {
+  onCancelDeleteTask() {
     this.CloseTaskDeleteModal.emit();
   }
 
-  OnCloseTaskDeleteDialog() {
+  onCloseTaskDeleteDialog() {
     this.CloseTaskDeleteModal.emit();
   }
 

@@ -10,6 +10,7 @@ import {
 } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { Task } from "src/app/Model/Task";
+import { User } from "src/app/Model/User";
 import { AuthService } from "src/app/Services/auth.service";
 
 @Component({
@@ -19,23 +20,22 @@ import { AuthService } from "src/app/Services/auth.service";
 })
 export class CreateTaskComponent implements OnInit, AfterViewInit {
   authService: AuthService = inject(AuthService);
+  @ViewChild("taskForm") taskForm: NgForm;
   @Input() isEditMode: boolean = false;
   @Input() selectedTask: Task;
-  @ViewChild("taskForm") taskForm: NgForm;
   @Output()
   CloseForm: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output()
   EmitTaskData: EventEmitter<Task> = new EventEmitter<Task>();
 
   priorityOptions = ["Low", "Medium", "High", "Critical"];
-
   statusOptions = ["Open", "Started", "In-progress", "Complete"];
 
   defaultAssignedTo: string = "Low";
   defaultPriority: string = "Low";
   defaultStatus: string = "Open";
 
-  usersList = [];
+  usersList: User[] = [] as User[];
 
   ngOnInit(): void {
     this.authService.getAllUsers().subscribe({
@@ -51,12 +51,12 @@ export class CreateTaskComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  OnCloseForm() {
+  onCloseForm() {
     this.CloseForm.emit(false);
   }
 
   OnFormSubmitted(form: NgForm) {
     this.EmitTaskData.emit(form.value);
-    this.OnCloseForm();
+    this.onCloseForm();
   }
 }

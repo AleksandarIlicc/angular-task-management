@@ -1,7 +1,7 @@
 <div class="overlay">
   <div class="popup">
     <h2>{{ isEditMode ? "Update Task" : "Create a new Task" }}</h2>
-    <a class="close" (click)="OnCloseForm()">&times;</a>
+    <a class="close" (click)="onCloseForm()">&times;</a>
     <div class="content">
       <section class="container">
         <form
@@ -38,6 +38,7 @@
                 [ngModel]="defaultAssignedTo"
                 required
                 #assignedto="ngModel"
+                ngDefaultControl
               >
                 <option hidden>Assigned to</option>
                 <option
@@ -81,6 +82,7 @@
                   [ngModel]="defaultPriority"
                   required
                   #priority="ngModel"
+                  ngDefaultControl
                 >
                   <option hidden>Priority</option>
                   <option
@@ -104,6 +106,7 @@
                   [ngModel]="defaultStatus"
                   required
                   #status="ngModel"
+                  ngDefaultControl
                 >
                   <option hidden>Status</option>
                   <option value="open">Open</option>
