@@ -4,91 +4,64 @@ import {
   HttpHeaders,
   HttpErrorResponse,
 } from "@angular/common/http";
-import { Task } from "../Model/Task";
-import { map, catchError, tap } from "rxjs/operators";
+import { map, catchError } from "rxjs/operators";
 import { Observable, throwError } from "rxjs";
 import { LoggingService } from "./Logging.Service";
 import { AuthService } from "./auth.service";
+import { ApiResponse, Task } from "../Model/Task";
 
 @Injectable({
   providedIn: "root",
 })
 export class TaskService {
+  private readonly BASE_URL =
+    "https://angulartaskmanagement-default-rtdb.europe-west1.firebasedatabase.app/tasks";
+
   http: HttpClient = inject(HttpClient);
   loggingService: LoggingService = inject(LoggingService);
   authService: AuthService = inject(AuthService);
 
-  GetAlltasks() {
-    return this.http
-      .get(
-        "https://angulartaskmanagement-default-rtdb.europe-west1.firebasedatabase.app/tasks.json"
-      )
-      .pipe(
-        map((response) => this.transformResponseToArray(response)),
-        catchError((err) => this.handleError(err))
-      );
+  GetAlltasks(): Observable<Task[]> {
+    return this.http.get<ApiResponse>(`${this.BASE_URL}.json`).pipe(
+      map((response) => this.transformResponseToArray(response)),
+      catchError((err) => this.handleError(err))
+    );
   }
 
-  GetTaskDetails(id: string | undefined) {
+  GetTaskDetails(id: string | undefined): Observable<Task> {
     return this.http
-      .get(
-        "https://angulartaskmanagement-default-rtdb.europe-west1.firebasedatabase.app/tasks/" +
-          id +
-          ".json"
-      )
+      .get<Task>(`${this.BASE_URL}/${id}.json`)
       .pipe(catchError((err) => this.handleError(err)));
   }
 
-  CreateTask(task: Task) {
+  CreateTask(task: Task): Observable<{ name: string }> {
     const headers = new HttpHeaders({ "my-header": "hello-world" });
 
     return this.http
-      .post<{ name: string }>(
-        "https://angulartaskmanagement-default-rtdb.europe-west1.firebasedatabase.app/tasks.json",
-        task,
-        { headers: headers }
-      )
+      .post<{ name: string }>(`${this.BASE_URL}.json`, task, { headers })
       .pipe(catchError((err) => this.handleError(err)));
   }
 
-  UpdateTask(id: string | undefined, data: Task) {
+  UpdateTask(id: string | undefined, data: Task): Observable<Task> {
     return this.http
-      .put(
-        "https://angulartaskmanagement-default-rtdb.europe-west1.firebasedatabase.app/tasks/" +
-          id +
-          ".json",
-        data
-      )
+      .put<Task>(`${this.BASE_URL}/${id}.json`, data)
       .pipe(catchError((err) => this.handleError(err)));
   }
 
-  DeleteTask(id: string | undefined) {
+  DeleteTask(id: string | undefined): Observable<void> {
     return this.http
-      .delete(
-        "https://angulartaskmanagement-default-rtdb.europe-west1.firebasedatabase.app/tasks/" +
-          id +
-          ".json"
-      )
+      .delete<void>(`${this.BASE_URL}/${id}.json`)
       .pipe(catchError((err) => this.handleError(err)));
   }
 
-  DeleteAllTasks() {
+  DeleteAllTasks(): Observable<void> {
     return this.http
-      .delete(
-        "https://angulartaskmanagement-default-rtdb.europe-west1.firebasedatabase.app/tasks.json",
-        { observe: "events", responseType: "json" }
-      )
+      .delete<void>(`${this.BASE_URL}.json`)
       .pipe(catchError((err) => this.handleError(err)));
   }
 
-  private transformResponseToArray(response: any): Task[] {
-    const tasks: Task[] = [];
-    for (const key in response) {
-      if (response.hasOwnProperty(key)) {
-        tasks.push({ ...response[key], id: key });
-      }
-    }
-    return tasks;
+  private transformResponseToArray(response: ApiResponse): Task[] {
+    return Object.keys(response).map((key) => ({ ...response[key], id: key }));
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {

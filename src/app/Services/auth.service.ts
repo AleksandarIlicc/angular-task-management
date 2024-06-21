@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { AuthResponse } from "../Model/AuthResponse";
-import { BehaviorSubject, catchError, throwError } from "rxjs";
+import { BehaviorSubject, Observable, catchError, throwError } from "rxjs";
 import { User, UserReponse } from "../Model/User";
 import { map, tap } from "rxjs/operators";
 import { Router } from "@angular/router";
@@ -14,7 +14,11 @@ export class AuthService {
   router: Router = inject(Router);
   private tokenExpiretimer: any;
 
-  signup(fullname: string, email: string, password: string) {
+  signup(
+    fullname: string,
+    email: string,
+    password: string
+  ): Observable<AuthResponse> {
     const data = {
       email: email,
       password: password,
@@ -37,7 +41,7 @@ export class AuthService {
       );
   }
 
-  login(email: string, password: string) {
+  login(email: string, password: string): Observable<AuthResponse> {
     const data = { email: email, password: password, returnSecureToken: true };
 
     return this.http
@@ -52,7 +56,7 @@ export class AuthService {
       );
   }
 
-  logout() {
+  logout(): void {
     this.user.next(null);
     this.router.navigate(["/login"]);
     localStorage.removeItem("user");
@@ -63,8 +67,14 @@ export class AuthService {
     this.tokenExpiretimer = null;
   }
 
-  autoLogin() {
-    const user = JSON.parse(localStorage.getItem("user"));
+  autoLogin(): void {
+    const user: {
+      fullname: string;
+      email: string;
+      id: string;
+      _token: string;
+      _expiresIn: string;
+    } = JSON.parse(localStorage.getItem("user"));
 
     if (!user) {
       return;
@@ -75,7 +85,7 @@ export class AuthService {
       user.email,
       user.id,
       user._token,
-      user._expiresIn
+      new Date(user._expiresIn)
     );
 
     if (loggedUser.token) {
@@ -86,13 +96,13 @@ export class AuthService {
     }
   }
 
-  autoLogout(expireTime: number) {
+  autoLogout(expireTime: number): void {
     this.tokenExpiretimer = setTimeout(() => {
       this.logout();
     }, expireTime);
   }
 
-  getAllUsers() {
+  getAllUsers(): Observable<User[]> {
     return this.http
       .get<UserReponse>(
         "https://angulartaskmanagement-default-rtdb.europe-west1.firebasedatabase.app/users.json"
@@ -103,11 +113,11 @@ export class AuthService {
       );
   }
 
-  private handleCreateUser(res, fullname: string) {
+  private handleCreateUser(res: AuthResponse, fullname: string | null): void {
     const expiresInTs = new Date().getTime() + +res.expiresIn * 1000;
     const expiresIn = new Date(expiresInTs);
     const user = new User(
-      res.displayName || fullname,
+      res.displayName || fullname || "",
       res.email,
       res.localId,
       res.idToken,
@@ -115,27 +125,34 @@ export class AuthService {
     );
 
     this.user.next(user);
-    this.autoLogout(res.expiresIn * 1000);
+    this.autoLogout(+res.expiresIn * 1000);
 
     localStorage.setItem("user", JSON.stringify(user));
   }
 
-  private saveUserToDatabase(userId: string, email: string, fullname: string) {
+  private saveUserToDatabase(
+    userId: string,
+    email: string,
+    fullname: string
+  ): Observable<User> {
     const user = { id: userId, email, fullname };
-    return this.http.post(
+    return this.http.post<User>(
       "https://angulartaskmanagement-default-rtdb.europe-west1.firebasedatabase.app/users.json",
       user
     );
   }
 
-  private updateUserProfile(token: string, displayName: string) {
+  private updateUserProfile(
+    token: string,
+    displayName: string
+  ): Observable<User> {
     const data = {
       idToken: token,
       displayName: displayName,
       returnSecureToken: true,
     };
 
-    return this.http.post(
+    return this.http.post<User>(
       "https://identitytoolkit.googleapis.com/v1/accounts:update?key=" +
         environment.firebaseAPIKEY,
       data
@@ -143,16 +160,12 @@ export class AuthService {
   }
 
   transformResponseToArray(res: UserReponse) {
-    const users = [];
-    for (let [key, value] of Object.entries(res)) {
-      users.push(value);
-    }
-    return users;
+    return Object.values(res).map((value) => value);
   }
 
-  private handleError(err: HttpErrorResponse) {
+  private handleError(err: HttpErrorResponse): Observable<never> {
     let errorMessage = "An unknown error has occured";
-    console.log(err);
+
     if (!err.error || !err.error.error) {
       return throwError(() => errorMessage);
     }
@@ -170,7 +183,7 @@ export class AuthService {
     return throwError(() => errorMessage);
   }
 
-  private handleUserError(err: HttpErrorResponse) {
+  private handleUserError(err: HttpErrorResponse): Observable<never> {
     let errorMessage = "An unknown error occurred while fetching users.";
     if (err.error && err.error.error) {
       switch (err.error.error.message) {

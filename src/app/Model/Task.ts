@@ -1,10 +1,14 @@
 export interface Task {
+  id?: string;
   title: string;
   desc: string;
   assignedTo: string;
   createdAt: string;
-  priority: string;
   status: string;
+  priority: string;
   author: string;
-  id?: string;
+}
+
+export interface ApiResponse {
+  [key: string]: Task;
 }
