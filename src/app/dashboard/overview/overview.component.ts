@@ -199,7 +199,7 @@ export class OverviewComponent implements OnInit {
     this.isLoading$.next(true);
 
     this.taskService.GetAlltasks().subscribe({
-      next: (tasks) => {
+      next: (tasks: Task[]) => {
         // this.allTasks = tasks;
         // this.filteredTasks = tasks;
         this.allTasks$.next(tasks);

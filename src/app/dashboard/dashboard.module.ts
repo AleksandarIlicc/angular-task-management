@@ -11,6 +11,7 @@ import { DashboardRouteModule } from "./dashboard-route.module";
 import { SetTaskBackground } from "../CustomDirectives/SetTaskBackground.directive";
 import { SetStatusBackground } from "../CustomDirectives/SetStatusBackground.directive";
 import { DeleteTaskDialogComponent } from "./delete-task-dialog/delete-task-dialog.component";
+import { TaskStatusContainerComponent } from './task-status-container/task-status-container.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { DeleteTaskDialogComponent } from "./delete-task-dialog/delete-task-dial
     SetStatusBackground,
     TaskCardComponent,
     DeleteTaskDialogComponent,
+    TaskStatusContainerComponent,
   ],
   imports: [CommonModule, SharedModule, DashboardRouteModule],
   exports: [SharedModule],

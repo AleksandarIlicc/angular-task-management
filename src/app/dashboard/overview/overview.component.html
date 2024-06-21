@@ -64,44 +64,34 @@
   <app-loader *ngIf="isLoading$ | async"></app-loader>
 
   <div
-    style="text-align: center"
     *ngIf="
-      (allTasks$ | async)?.length < 1 || (filteredTasks$ | async)?.length < 1
+      (allTasks$ | async)?.length > 0 && (filteredTasks$ | async)?.length > 0;
+      else noTasks
     "
   >
-    <h2>No tasks found.</h2>
+    <div class="dashboard-item-container" *ngIf="!(isLoading$ | async)">
+      <ng-container *ngFor="let status of statuses">
+        <app-task-status-container
+          [status]="status"
+          [tasks]="(tasksByStatus$ | async)[status]"
+          [currentUser]="currentUser$ | async"
+          (editTask)="OnEditTaskClicked($event)"
+          (deleteTask)="DeleteTask($event)"
+          (showDetails)="showCurrentTaskDetails($event)"
+          (createTask)="OpenCreateTaskForm()"
+        ></app-task-status-container>
+      </ng-container>
+    </div>
   </div>
 
-  <div class="dashboard-item-container" *ngIf="!(isLoading$ | async)">
-    <ng-container *ngFor="let status of statuses">
-      <div class="task-status-container" setTaskBackground [status]="status">
-        <div class="task-status-header">
-          <span class="number-of-task">{{
-            (tasksByStatus$ | async)[status]?.length
-          }}</span>
-          <h3>{{ status | uppercase }}</h3>
-        </div>
-
-        <ng-container *ngIf="(tasksByStatus$ | async)[status]?.length < 1">
-          <p class="no-tasks-yet">No tasks have been created yet.</p>
-        </ng-container>
-
-        <ng-container
-          *ngFor="let task of (tasksByStatus$ | async)[status] || []"
-        >
-          <app-task-card
-            [task]="task"
-            [currentUser]="currentUser$ | async"
-            (editTask)="OnEditTaskClicked(task.id)"
-            (deleteTask)="DeleteTask(task.id)"
-            (showDetails)="showCurrentTaskDetails(task.id)"
-          ></app-task-card>
-        </ng-container>
-
-        <button class="create-task-btn in-table" (click)="OpenCreateTaskForm()">
-          Add new task
-        </button>
-      </div>
-    </ng-container>
-  </div>
+  <ng-template #noTasks>
+    <div
+      style="text-align: center"
+      *ngIf="
+        (allTasks$ | async)?.length < 1 || (filteredTasks$ | async)?.length < 1
+      "
+    >
+      <h2>No tasks found.</h2>
+    </div>
+  </ng-template>
 </div>
