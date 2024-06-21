@@ -28,11 +28,7 @@ export class DeleteTaskDialogComponent {
     });
   }
 
-  onCancelDeleteTask() {
-    this.CloseTaskDeleteModal.emit();
-  }
-
-  onCloseTaskDeleteDialog() {
+  onCloseOrCancelTaskDeleteDialog() {
     this.CloseTaskDeleteModal.emit();
   }
 
