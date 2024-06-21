@@ -90,25 +90,25 @@ export class OverviewComponent implements OnInit {
     });
   }
 
-  CloseTaskDetails(): void {
+  closeTaskDetails(): void {
     this.showTaskDetails = false;
   }
 
-  CloseTaskDeleteDialog(): void {
+  closeTaskDeleteDialog(): void {
     this.showTaskDeleteModal = false;
   }
 
-  SuccessDeletedTask(): void {
+  successDeletedTask(): void {
     this.showTaskDeleteModal = false;
     this.fetchAllTasks();
   }
 
-  CloseCreateTaskForm(): void {
+  closeCreateTaskForm(): void {
     this.currentTaskId = "";
     this.showCreateTaskForm = false;
   }
 
-  CreateOrUpdateTask(data: Task): void {
+  createOrUpdateTask(data: Task): void {
     // const currentUser = this.currentUser$.getValue();
 
     this.currentUser$.pipe(take(1)).subscribe((currentUser) => {

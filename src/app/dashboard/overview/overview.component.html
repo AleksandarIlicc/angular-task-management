@@ -1,7 +1,7 @@
 <app-create-task
   *ngIf="showCreateTaskForm"
-  (CloseForm)="CloseCreateTaskForm()"
-  (EmitTaskData)="CreateOrUpdateTask($event)"
+  (CloseForm)="closeCreateTaskForm()"
+  (EmitTaskData)="createOrUpdateTask($event)"
   [isEditMode]="editMode"
   [selectedTask]="selectedTask"
 >
@@ -9,14 +9,14 @@
 
 <app-task-details
   *ngIf="showTaskDetails"
-  (CloseDetailView)="CloseTaskDetails()"
+  (CloseDetailView)="closeTaskDetails()"
   [currentTask]="currentTask"
 ></app-task-details>
 
 <app-delete-task-dialog
   *ngIf="showTaskDeleteModal"
-  (CloseTaskDeleteModal)="CloseTaskDeleteDialog()"
-  (SuccessDeletedTask)="SuccessDeletedTask()"
+  (CloseTaskDeleteModal)="closeTaskDeleteDialog()"
+  (SuccessDeletedTask)="successDeletedTask()"
   [currentTaskId]="taskToDeleteId"
 ></app-delete-task-dialog>
 
