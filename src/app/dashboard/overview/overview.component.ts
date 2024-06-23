@@ -165,13 +165,15 @@ export class OverviewComponent implements OnInit {
     // this.selectedTask = this.allTasks.find((task) => {
     //   return task.id === id;
     // });
-    this.allTasks$.subscribe((allTasks) => {
+    this.allTasks$.pipe(take(1)).subscribe((allTasks) => {
       this.selectedTask = allTasks.find((task) => task.id === id);
     });
   }
 
   SearchTask(searchForm: NgForm): void {
-    this.searchQuery = searchForm.value.searchQuery?.toLowerCase() || "";
+    this.searchQuery = (searchForm.value.searchQuery || "")
+      .trim()
+      .toLowerCase();
 
     if (searchForm.valid || this.searchQuery === "") {
       // this.filteredTasks = this.allTasks.filter(
@@ -180,18 +182,28 @@ export class OverviewComponent implements OnInit {
       //     task.assignedTo.toLowerCase().includes(this.searchQuery)
       // );
 
-      const filteredTasks = this.allTasks$
-        .getValue()
-        .filter(
-          (task) =>
-            task.title.toLowerCase().includes(this.searchQuery) ||
-            task.assignedTo.toLowerCase().includes(this.searchQuery)
-        );
-      this.filteredTasks$.next(filteredTasks);
-      this.organizeTasksByStatus();
+      this.allTasks$
+        .pipe(
+          take(1),
+          map((allTasks) =>
+            allTasks.filter(
+              (task) =>
+                this.normalizeText(task.title).includes(this.searchQuery) ||
+                this.normalizeText(task.assignedTo).includes(this.searchQuery)
+            )
+          )
+        )
+        .subscribe((filteredTasks) => {
+          this.filteredTasks$.next(filteredTasks);
+          this.organizeTasksByStatus();
+        });
     }
 
     searchForm.reset();
+  }
+
+  private normalizeText(text: string): string {
+    return text.trim().toLowerCase();
   }
 
   private fetchAllTasks() {
