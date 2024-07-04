@@ -7,7 +7,9 @@ import { map, tap } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { environment } from "src/environments/environment";
 
-@Injectable()
+@Injectable({
+  providedIn: "root",
+})
 export class AuthService {
   http: HttpClient = inject(HttpClient);
   user: BehaviorSubject<User> = new BehaviorSubject<User>(null);

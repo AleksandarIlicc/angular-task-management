@@ -9,9 +9,10 @@ import { FooterComponent } from "./footer/footer.component";
 
 import { RouteModule } from "./route.module";
 import { CoreModule } from "./core.module";
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, HomeComponent, FooterComponent],
+  declarations: [AppComponent, HeaderComponent, HomeComponent, FooterComponent, PageNotFoundComponent],
   imports: [BrowserModule, HttpClientModule, RouteModule, CoreModule],
   bootstrap: [AppComponent],
 })
