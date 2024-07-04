@@ -63,12 +63,7 @@
 
   <app-loader *ngIf="isLoading$ | async"></app-loader>
 
-  <div
-    *ngIf="
-      (allTasks$ | async)?.length > 0 && (filteredTasks$ | async)?.length > 0;
-      else noTasks
-    "
-  >
+  <div *ngIf="(allTasks$ | async)?.length > 0; else noTasks">
     <div class="dashboard-item-container" *ngIf="!(isLoading$ | async)">
       <ng-container *ngFor="let status of statuses">
         <app-task-status-container
@@ -85,12 +80,7 @@
   </div>
 
   <ng-template #noTasks>
-    <div
-      style="text-align: center"
-      *ngIf="
-        (allTasks$ | async)?.length < 1 || (filteredTasks$ | async)?.length < 1
-      "
-    >
+    <div style="text-align: center" *ngIf="(allTasks$ | async)?.length < 1">
       <h2>No tasks found.</h2>
     </div>
   </ng-template>

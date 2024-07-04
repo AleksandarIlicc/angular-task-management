@@ -194,8 +194,7 @@ export class OverviewComponent implements OnInit {
           )
         )
         .subscribe((filteredTasks) => {
-          this.filteredTasks$.next(filteredTasks);
-          this.organizeTasksByStatus();
+          this.organizeTasksByStatus(filteredTasks);
         });
     }
 
@@ -213,10 +212,8 @@ export class OverviewComponent implements OnInit {
     this.taskService.GetAlltasks().subscribe({
       next: (tasks: Task[]) => {
         // this.allTasks = tasks;
-        // this.filteredTasks = tasks;
         this.allTasks$.next(tasks);
-        this.filteredTasks$.next(tasks);
-        this.organizeTasksByStatus();
+        this.organizeTasksByStatus(tasks);
         // this.isLoading = false;
         this.isLoading$.next(false);
       },
@@ -252,7 +249,7 @@ export class OverviewComponent implements OnInit {
   //     );
   //   });
   // }
-  private organizeTasksByStatus() {
+  private organizeTasksByStatus(tasks: Task[]) {
     const organizedTasks = {
       open: [],
       started: [],
@@ -260,9 +257,7 @@ export class OverviewComponent implements OnInit {
       complete: [],
     };
 
-    const allTasks = this.filteredTasks$.getValue();
-
-    allTasks.forEach((task) => {
+    tasks.forEach((task) => {
       organizedTasks[task.status].push(task);
     });
 
