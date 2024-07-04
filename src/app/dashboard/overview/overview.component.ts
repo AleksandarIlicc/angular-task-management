@@ -22,8 +22,6 @@ export class OverviewComponent implements OnInit {
 
   // allTasks: Task[] = [];
   allTasks$: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>([]);
-  // filteredTasks: Task[] = [];
-  filteredTasks$: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>([]);
   // currentUser: string | null = null;
   currentUser$: BehaviorSubject<string | null> = new BehaviorSubject<
     string | null
